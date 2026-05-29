@@ -2,7 +2,11 @@ import { Candle, Signal, makeSignal, ema, sma, rsi, macd, atr, bollingerBands, v
 
 // 1. Triple Confluence
 export function tripleConfluence(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 205) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 205) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const closes = c.map((x) => x.close);
   const ef = ema(closes, 50), es = ema(closes, 200), rs = rsi(closes, 14);
   const { macd: ml, signal: sg, histogram: h } = macd(closes);
@@ -16,7 +20,11 @@ export function tripleConfluence(c: Candle[]): Signal {
 
 // 2. BB Squeeze
 export function bbSqueeze(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 70) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 70) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const closes = c.map((x) => x.close);
   const { upper, middle, lower } = bollingerBands(closes, 20, 2);
   const width = upper.map((u, i) => (u - lower[i]) / middle[i]);
@@ -39,7 +47,11 @@ export function bbSqueeze(c: Candle[]): Signal {
 
 // 3. Ichimoku
 export function ichimoku(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 100) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 100) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const highs = c.map((x) => x.high), lows = c.map((x) => x.low);
   const rMax = (arr: number[], p: number, idx: number) => Math.max(...arr.slice(Math.max(0, idx - p + 1), idx + 1));
   const rMin = (arr: number[], p: number, idx: number) => Math.min(...arr.slice(Math.max(0, idx - p + 1), idx + 1));
@@ -54,6 +66,7 @@ export function ichimoku(c: Candle[]): Signal {
   const cloudTop = Math.max(sa, sb), cloudBot = Math.min(sa, sb), green = sa > sb;
   const cur = c[i];
   if (cur.close > cloudTop && tenkan > kijun && tenkanP <= kijunP && green) {
+<<<<<<< HEAD
     const r = cur.close - kijun; if (r <= 0) return makeSignal({ reason: "Invalid risk" });
     return makeSignal({ signal: "long", entry: cur.close, stop_loss: kijun, take_profit: [cur.close + r * 2, cur.close + r * 3, cur.close + r * 5], confidence: 0.8, reason: "Ichimoku full bullish" });
   }
@@ -62,11 +75,25 @@ export function ichimoku(c: Candle[]): Signal {
     return makeSignal({ signal: "short", entry: cur.close, stop_loss: kijun, take_profit: [cur.close - r * 2, cur.close - r * 3, cur.close - r * 5], confidence: 0.8, reason: "Ichimoku full bearish" });
   }
   return makeSignal({ reason: "Ichimoku not aligned" });
+=======
+    const r = cur.close - kijun; if (r <= 0) return makeSignal({ reason: "Geçersiz risk" });
+    return makeSignal({ signal: "long", entry: cur.close, stop_loss: kijun, take_profit: [cur.close + r * 2, cur.close + r * 3, cur.close + r * 5], confidence: 0.8, reason: "Ichimoku full bullish" });
+  }
+  if (cur.close < cloudBot && tenkan < kijun && tenkanP >= kijunP && !green) {
+    const r = kijun - cur.close; if (r <= 0) return makeSignal({ reason: "Geçersiz risk" });
+    return makeSignal({ signal: "short", entry: cur.close, stop_loss: kijun, take_profit: [cur.close - r * 2, cur.close - r * 3, cur.close - r * 5], confidence: 0.8, reason: "Ichimoku full bearish" });
+  }
+  return makeSignal({ reason: "Ichimoku hizalı değil" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
 }
 
 // 4. VWAP + Volume
 export function vwapVolume(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 50) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 50) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const vw = vwap(c), i = c.length - 1, cur = c[i], prev = c[i - 1];
   const a = atr(c, 14), vols = c.map((x) => x.volume), avgV = sma(vols, 20)[i];
   const spike = cur.volume > avgV * 1.5;
@@ -83,13 +110,21 @@ export function vwapVolume(c: Candle[]): Signal {
 
 // 5. RSI Divergence
 export function rsiDivergence(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 44) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 44) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const closes = c.map((x) => x.close), rs = rsi(closes, 14);
   const sh = swingHighs(c, 5), sl = swingLows(c, 5);
   const li: number[] = [], hi: number[] = [];
   sl.forEach((v, i) => v !== null && li.push(i));
   sh.forEach((v, i) => v !== null && hi.push(i));
+<<<<<<< HEAD
   if (li.length < 2 || hi.length < 2) return makeSignal({ reason: "Insufficient swings" });
+=======
+  if (li.length < 2 || hi.length < 2) return makeSignal({ reason: "Yetersiz swing" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const a = atr(c, 14), cur = c[c.length - 1], ai = a.length - 1;
   const l1 = li[li.length - 2], l2 = li[li.length - 1];
   const h1 = hi[hi.length - 2], h2 = hi[hi.length - 1];
@@ -106,7 +141,11 @@ export function rsiDivergence(c: Candle[]): Signal {
 
 // 6. Chandelier
 export function chandelier(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 205) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 205) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const closes = c.map((x) => x.close), a = atr(c, 22), e = ema(closes, 200);
   const highs = c.map((x) => x.high), lows = c.map((x) => x.low);
   const ls: number[] = [], ss: number[] = [];
@@ -117,11 +156,19 @@ export function chandelier(c: Candle[]): Signal {
   }
   const i = c.length - 1, cur = c[i], prev = c[i - 1];
   if (cur.close > ss[i] && prev.close <= ss[i - 1] && cur.close > e[i]) {
+<<<<<<< HEAD
     const r = cur.close - ls[i]; if (r <= 0) return makeSignal({ reason: "Invalid risk" });
     return makeSignal({ signal: "long", entry: cur.close, stop_loss: ls[i], take_profit: [cur.close + r * 1.5, cur.close + r * 2.5, cur.close + r * 4], confidence: 0.7, reason: "Chandelier long breakout" });
   }
   if (cur.close < ls[i] && prev.close >= ls[i - 1] && cur.close < e[i]) {
     const r = ss[i] - cur.close; if (r <= 0) return makeSignal({ reason: "Invalid risk" });
+=======
+    const r = cur.close - ls[i]; if (r <= 0) return makeSignal({ reason: "Geçersiz risk" });
+    return makeSignal({ signal: "long", entry: cur.close, stop_loss: ls[i], take_profit: [cur.close + r * 1.5, cur.close + r * 2.5, cur.close + r * 4], confidence: 0.7, reason: "Chandelier long breakout" });
+  }
+  if (cur.close < ls[i] && prev.close >= ls[i - 1] && cur.close < e[i]) {
+    const r = ss[i] - cur.close; if (r <= 0) return makeSignal({ reason: "Geçersiz risk" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
     return makeSignal({ signal: "short", entry: cur.close, stop_loss: ss[i], take_profit: [cur.close - r * 1.5, cur.close - r * 2.5, cur.close - r * 4], confidence: 0.7, reason: "Chandelier short breakout" });
   }
   return makeSignal({ reason: "Chandelier breakout yok" });
@@ -158,17 +205,30 @@ function calcSt(c: Candle[], p = 10, m = 3) {
   return { st, dir };
 }
 export function supertrendAdx(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 60) return makeSignal({ reason: "Insufficient data" });
   const { st, dir } = calcSt(c, 10, 3), adx = calcAdx(c, 14), i = c.length - 1, cur = c[i];
   const up = dir[i] === 1 && dir[i - 1] === -1, dn = dir[i] === -1 && dir[i - 1] === 1, strong = adx[i] > 25;
   if (up && strong) { const r = cur.close - st[i]; if (r <= 0) return makeSignal({ reason: "Invalid risk" }); return makeSignal({ signal: "long", entry: cur.close, stop_loss: st[i], take_profit: [cur.close + r * 1.5, cur.close + r * 2.5, cur.close + r * 4], confidence: 0.78, reason: `Supertrend flip up + ADX ${adx[i].toFixed(0)}` }); }
   if (dn && strong) { const r = st[i] - cur.close; if (r <= 0) return makeSignal({ reason: "Invalid risk" }); return makeSignal({ signal: "short", entry: cur.close, stop_loss: st[i], take_profit: [cur.close - r * 1.5, cur.close - r * 2.5, cur.close - r * 4], confidence: 0.78, reason: `Supertrend flip down + ADX ${adx[i].toFixed(0)}` }); }
   return makeSignal({ reason: "No Supertrend flip + strong ADX" });
+=======
+  if (c.length < 60) return makeSignal({ reason: "Yetersiz veri" });
+  const { st, dir } = calcSt(c, 10, 3), adx = calcAdx(c, 14), i = c.length - 1, cur = c[i];
+  const up = dir[i] === 1 && dir[i - 1] === -1, dn = dir[i] === -1 && dir[i - 1] === 1, strong = adx[i] > 25;
+  if (up && strong) { const r = cur.close - st[i]; if (r <= 0) return makeSignal({ reason: "Geçersiz risk" }); return makeSignal({ signal: "long", entry: cur.close, stop_loss: st[i], take_profit: [cur.close + r * 1.5, cur.close + r * 2.5, cur.close + r * 4], confidence: 0.78, reason: `Supertrend flip up + ADX ${adx[i].toFixed(0)}` }); }
+  if (dn && strong) { const r = st[i] - cur.close; if (r <= 0) return makeSignal({ reason: "Geçersiz risk" }); return makeSignal({ signal: "short", entry: cur.close, stop_loss: st[i], take_profit: [cur.close - r * 1.5, cur.close - r * 2.5, cur.close - r * 4], confidence: 0.78, reason: `Supertrend flip down + ADX ${adx[i].toFixed(0)}` }); }
+  return makeSignal({ reason: "Supertrend flip + güçlü ADX yok" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
 }
 
 // 8. Wyckoff
 export function wyckoff(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 80) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 80) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const i = c.length - 1, cur = c[i], a = atr(c, 14), ca = a[i];
   const rng = c.slice(c.length - 35, c.length - 1);
   const rh = Math.max(...rng.map((x) => x.high)), rl = Math.min(...rng.map((x) => x.low)), size = rh - rl;
@@ -182,6 +242,7 @@ export function wyckoff(c: Candle[]): Signal {
   }
   return makeSignal({ reason: "Spring/Upthrust yok" });
 }
+<<<<<<< HEAD
 
 // 9. Stochastic RSI - momentum oscillator
 export function stochRsi(c: Candle[]): Signal {
@@ -292,3 +353,5 @@ export function keltnerSqueeze(c: Candle[]): Signal {
   }
   return makeSignal({ reason: squeezed ? "Squeeze active (wait)" : "No squeeze" });
 }
+=======
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814

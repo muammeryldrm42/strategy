@@ -1,6 +1,10 @@
 /**
  * Order Block Strategy
+<<<<<<< HEAD
  * Last opposite-direction candle + strong impulse + retest = entry
+=======
+ * Son zıt-yön mum + güçlü impulse + retest = entry
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
  */
 import { Candle, Signal, makeSignal, atr, ema } from "../../common";
 

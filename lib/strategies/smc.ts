@@ -2,7 +2,11 @@ import { Candle, Signal, makeSignal, ema, atr, swingHighs, swingLows } from "../
 
 // 1. FVG
 export function fvg(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 205) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 205) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const closes = c.map((x) => x.close);
   const a = atr(c, 14);
   const e = ema(closes, 200);
@@ -30,12 +34,20 @@ export function fvg(c: Candle[]): Signal {
       }
     }
   }
+<<<<<<< HEAD
   return makeSignal({ reason: "No active FVG entry" });
+=======
+  return makeSignal({ reason: "Aktif FVG girişi yok" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
 }
 
 // 2. Order Block
 export function orderBlock(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 210) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 210) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const closes = c.map((x) => x.close);
   const a = atr(c, 14);
   const e = ema(closes, 200);
@@ -64,30 +76,52 @@ export function orderBlock(c: Candle[]): Signal {
 
 // 3. Liquidity Grab + BOS
 export function liquidityGrabBos(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 30) return makeSignal({ reason: "Insufficient data" });
   const sh = swingHighs(c, 10).filter((v): v is number => v !== null);
   const sl = swingLows(c, 10).filter((v): v is number => v !== null);
   if (sh.length < 2 || sl.length < 2) return makeSignal({ reason: "No clean structure" });
+=======
+  if (c.length < 30) return makeSignal({ reason: "Yetersiz veri" });
+  const sh = swingHighs(c, 10).filter((v): v is number => v !== null);
+  const sl = swingLows(c, 10).filter((v): v is number => v !== null);
+  if (sh.length < 2 || sl.length < 2) return makeSignal({ reason: "Net yapı yok" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const a = atr(c, 14);
   const cur = c[c.length - 1], prev = c[c.length - 2];
   const lastH = sh[sh.length - 1], lastL = sl[sl.length - 1];
   if (prev.low < lastL && prev.close > lastL && cur.close > lastH) {
     const slv = prev.low - 0.3 * a[a.length - 1], r = cur.close - slv;
+<<<<<<< HEAD
     return makeSignal({ signal: "long", entry: cur.close, stop_loss: slv, take_profit: [cur.close + r * 2, cur.close + r * 3, cur.close + r * 5], confidence: 0.82, reason: "Liquidity grab + BOS up" });
   }
   if (prev.high > lastH && prev.close < lastH && cur.close < lastL) {
     const slv = prev.high + 0.3 * a[a.length - 1], r = slv - cur.close;
     return makeSignal({ signal: "short", entry: cur.close, stop_loss: slv, take_profit: [cur.close - r * 2, cur.close - r * 3, cur.close - r * 5], confidence: 0.82, reason: "Liquidity grab + BOS down" });
+=======
+    return makeSignal({ signal: "long", entry: cur.close, stop_loss: slv, take_profit: [cur.close + r * 2, cur.close + r * 3, cur.close + r * 5], confidence: 0.82, reason: "Likidite avı + BOS yukarı" });
+  }
+  if (prev.high > lastH && prev.close < lastH && cur.close < lastL) {
+    const slv = prev.high + 0.3 * a[a.length - 1], r = slv - cur.close;
+    return makeSignal({ signal: "short", entry: cur.close, stop_loss: slv, take_profit: [cur.close - r * 2, cur.close - r * 3, cur.close - r * 5], confidence: 0.82, reason: "Likidite avı + BOS aşağı" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   }
   return makeSignal({ reason: "LG+BOS kurulumu yok" });
 }
 
 // 4. Inducement
 export function inducement(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 24) return makeSignal({ reason: "Insufficient data" });
   const sh = swingHighs(c, 8).filter((v): v is number => v !== null);
   const sl = swingLows(c, 8).filter((v): v is number => v !== null);
   if (sh.length < 2 || sl.length < 2) return makeSignal({ reason: "No structure" });
+=======
+  if (c.length < 24) return makeSignal({ reason: "Yetersiz veri" });
+  const sh = swingHighs(c, 8).filter((v): v is number => v !== null);
+  const sl = swingLows(c, 8).filter((v): v is number => v !== null);
+  if (sh.length < 2 || sl.length < 2) return makeSignal({ reason: "Yapı yok" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const a = atr(c, 14), cur = c[c.length - 1], last3 = c.slice(-4, -1);
   const lastL = sl[sl.length - 1], lastH = sh[sh.length - 1];
   const wickBelow = last3.some((x) => x.low < lastL && x.close > lastL);
@@ -107,7 +141,11 @@ export function inducement(c: Candle[]): Signal {
 
 // 5. Equal Highs/Lows Sweep
 export function eqSweep(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 50) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 50) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const a = atr(c, 14), tol = a[a.length - 1] * 0.15;
   const rh = swingHighs(c, 5).filter((v): v is number => v !== null).slice(-10);
   const rl = swingLows(c, 5).filter((v): v is number => v !== null).slice(-10);
@@ -128,7 +166,11 @@ export function eqSweep(c: Candle[]): Signal {
 
 // 6. Breaker Block
 export function breakerBlock(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 220) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 220) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const closes = c.map((x) => x.close);
   const a = atr(c, 14), e = ema(closes, 200);
   const cur = c[c.length - 1], price = cur.close;
@@ -158,7 +200,11 @@ export function breakerBlock(c: Candle[]): Signal {
 
 // 7. OTE
 export function ote(c: Candle[]): Signal {
+<<<<<<< HEAD
   if (c.length < 220) return makeSignal({ reason: "Insufficient data" });
+=======
+  if (c.length < 220) return makeSignal({ reason: "Yetersiz veri" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   const closes = c.map((x) => x.close);
   const a = atr(c, 14), e = ema(closes, 200);
   const cur = c[c.length - 1], price = cur.close;
@@ -170,7 +216,11 @@ export function ote(c: Candle[]): Signal {
     if (sl[i] !== null && sli === -1) { sli = i; lastL = sl[i] as number; }
     if (shi !== -1 && sli !== -1) break;
   }
+<<<<<<< HEAD
   if (isNaN(lastH) || isNaN(lastL)) return makeSignal({ reason: "No swing structure" });
+=======
+  if (isNaN(lastH) || isNaN(lastL)) return makeSignal({ reason: "Swing yapısı yok" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
   if (shi > sli) {
     const lo = lastH - (lastH - lastL) * 0.79, hi = lastH - (lastH - lastL) * 0.62;
     if (price >= lo && price <= hi && trend === "up") {
@@ -184,6 +234,7 @@ export function ote(c: Candle[]): Signal {
       return makeSignal({ signal: "short", entry, stop_loss: slv, take_profit: [entry - r * 2, entry - r * 3, lastL], confidence: 0.77, reason: "OTE short (0.62-0.79 fib)" });
     }
   }
+<<<<<<< HEAD
   return makeSignal({ reason: "Price not in OTE zone" });
 }
 
@@ -258,4 +309,7 @@ export function powerOf3(c: Candle[]): Signal {
     return makeSignal({ signal: "short", entry: cur.close, stop_loss: slv, take_profit: [cur.close - r * 1.5, cur.close - r * 2.5, cur.close - r * 4], confidence: 0.81, reason: "PO3: Accum + upside manip + downside distribution" });
   }
   return makeSignal({ reason: "PO3 setup incomplete" });
+=======
+  return makeSignal({ reason: "Fiyat OTE bölgesinde değil" });
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
 }

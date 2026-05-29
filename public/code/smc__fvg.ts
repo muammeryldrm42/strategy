@@ -1,7 +1,11 @@
 /**
  * FVG (Fair Value Gap) Strategy
  * =============================
+<<<<<<< HEAD
  * Detects 3-candle liquidity gap, entry on mitigation.
+=======
+ * 3 ardışık mumda likidite boşluğu tespiti, mitigation entry.
+>>>>>>> 40b8debf6aee9c31feaea4d0f6fbe1f5b8d83814
  *
  * BULLISH FVG: candle[i-2].high < candle[i].low
  * BEARISH FVG: candle[i-2].low > candle[i].high
